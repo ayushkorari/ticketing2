@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: us.gcr.io/ticketing-dev-463918/client
+          image: us.gcr.io/ticketing-dev-463918/ticketing-client
 ---
 apiVersion: v1
 kind: Service
@@ -26,5 +26,5 @@ spec:
   ports:
     - name: client
       protocol: TCP
-      port: 4300   
-      targetPort: 4300          
+      port: 3000
+      targetPort: 3000
