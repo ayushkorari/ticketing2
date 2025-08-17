@@ -1,28 +1,56 @@
 import axios from "axios";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import type { Metadata } from "next";
+import { Ticket } from "@/types";
+import TicketCard from "@/components/ticket-card";
 
 export const metadata: Metadata = {
-  title: "Create Next App",
-  description: "Ticketing",
+  title: "GitTix - Buy and Sell Tickets",
+  description: "Ticketing Platform",
 };
 
 export default async function Home() {
   try {
-    const headersList = headers()
-    const res = await axios.get(
-      'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
+    const headersList = headers();
+    const ticketsRes = await axios.get(
+      'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/tickets',
       {
         headers: headersList as any
       } 
     );
-    console.log(res.data, cookies().get('session'), '====')
+    
+    const tickets: Ticket[] = ticketsRes.data;
+    
     return (
-      <h1>
-        {res.data.currentUser ? "Signed In" : "Not signed in"}
-      </h1>
+      <div className="container mt-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1>Available Tickets</h1>
+        </div>
+        
+        {tickets.length === 0 ? (
+          <div className="alert alert-info">
+            <h4>No tickets available</h4>
+            <p>Check back later for new tickets!</p>
+          </div>
+        ) : (
+          <div className="row">
+            {tickets.map((ticket) => (
+              <div key={ticket.id} className="col-md-6 col-lg-4">
+                <TicketCard ticket={ticket} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     );
   } catch (error) {
-    return <h1>error</h1>
+    return (
+      <div className="container mt-4">
+        <div className="alert alert-danger">
+          <h4>Error loading tickets</h4>
+          <p>Please try again later.</p>
+        </div>
+      </div>
+    );
   }
 }

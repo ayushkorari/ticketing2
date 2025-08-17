@@ -21,7 +21,7 @@ export default function Signout() {
 
   useEffect(() => {
     doRequest();
-  },[]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <h1>Signing you out...</h1>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 // Create the User Context
 const UserContext = createContext<any>({});
@@ -8,14 +8,14 @@ export const UserProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(); // State for logged-in user
 
   // Function to log in the user
-  const login = (userData: any) => {
+  const login = useCallback((userData: any) => {
     setUser(userData); // Set user data directly from components
-  };
+  }, []);
 
   // Function to log out the user
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null); // Reset user state
-  };
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, login, logout }}>

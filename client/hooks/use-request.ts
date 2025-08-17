@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 export interface IRequest {
     url: string;
@@ -10,7 +10,8 @@ export interface IRequest {
 
 export default function useRequest ({url,method,body,onSuccess}: IRequest) {
     const [errors, setErrors] = useState<any[]>([]);
-    const doRequest = async () => {
+    
+    const doRequest = useCallback(async () => {
         try {
             const response = await axios[method](url, body);
             setErrors([]);
@@ -19,6 +20,7 @@ export default function useRequest ({url,method,body,onSuccess}: IRequest) {
         } catch (error: any) {
             setErrors(error.response.data.errors);
         }
-    }
+    }, [url, method, body, onSuccess]);
+    
     return {doRequest, errors};
 } 
